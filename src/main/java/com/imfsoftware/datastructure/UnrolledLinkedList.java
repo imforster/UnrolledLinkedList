@@ -93,7 +93,6 @@ public class UnrolledLinkedList<T> implements List<T>, Iterable<T> {
 		return get(head, pos - 1);
 	}
 
-
 	@Override
 	public int size() {
 		return this.size.get();
@@ -147,17 +146,13 @@ public class UnrolledLinkedList<T> implements List<T>, Iterable<T> {
 	public boolean remove(Object o) {
 		boolean found = false;
 		int i = 1;
-		while (!found) {
-			if (i <= this.size()) {
-				if (this.get(i++).equals(o)) {
-					this.remove(i - 1);
-					return true;
-				}
-			} else {
-				return false;
+		while ((!found) && (i <= this.size())) {
+			if (this.get(i++).equals(o)) {
+				this.remove(i - 1);
+				found = true;
 			}
 		}
-		return false;
+		return found;
 	}
 
 	@Override
@@ -165,20 +160,16 @@ public class UnrolledLinkedList<T> implements List<T>, Iterable<T> {
 		boolean found = false;
 		int items_contained = 0;
 		int i = this.size();
-		while (!found) {
-			if (i > 0) {
-				T elem = this.get(i--);
-				if (c.contains(elem)) {
-					items_contained++;
-				}
-				if (c.size() == items_contained) {
-					return true;
-				}
-			} else {
-				return false;
+		while ((!found) && (i > 0)) {
+			T elem = this.get(i--);
+			if (c.contains(elem)) {
+				items_contained++;
+			}
+			if (c.size() == items_contained) {
+				found = true;
 			}
 		}
-		return false;
+		return found;
 	}
 
 	@Override
@@ -193,21 +184,18 @@ public class UnrolledLinkedList<T> implements List<T>, Iterable<T> {
 		boolean found = false;
 		int i = this.size();
 		int items_removed = 0;
-		while (!found) {
-			if (i > 0) {
-				T elem = this.get(i--);
-				if (c.contains(elem)) {
-					this.remove(i + 1);
-					items_removed++;
-				}
-				if (c.size() == items_removed) {
-					return true;
-				}
-			} else {
-				return false;
+		while ((!found) && (i > 0)) {
+			T elem = this.get(i--);
+			if (c.contains(elem)) {
+				this.remove(i + 1);
+				items_removed++;
 			}
+			if (c.size() == items_removed) {
+				found = true;
+			}
+
 		}
-		return false;
+		return found;
 	}
 
 	@Override
@@ -215,22 +203,18 @@ public class UnrolledLinkedList<T> implements List<T>, Iterable<T> {
 		boolean found = false;
 		int i = this.size();
 		int items_retained = 0;
-		while (!found) {
-			if (i > 0) {
-				T elem = this.get(i--);
-				if (!c.contains(elem)) {
-					this.remove(i + 1);
-				} else {
-					items_retained++;
-				}
+		while ((!found) && (i > 0)) {
+			T elem = this.get(i--);
+			if (!c.contains(elem)) {
+				this.remove(i + 1);
 			} else {
-				return false;
+				items_retained++;
 			}
 		}
 		if (c.size() == items_retained) {
-			return true;
+			found = true;
 		}
-		return false;
+		return found;
 	}
 
 	@Override
@@ -289,6 +273,8 @@ public class UnrolledLinkedList<T> implements List<T>, Iterable<T> {
 				if (this.get(i++).equals(o)) {
 					return i - 1;
 				}
+			} else {
+				found = false;
 			}
 		}
 		return -1;
@@ -303,6 +289,8 @@ public class UnrolledLinkedList<T> implements List<T>, Iterable<T> {
 				if (this.get(i--).equals(o)) {
 					return i + 1;
 				}
+			} else {
+				found = false;
 			}
 		}
 		return -1;
@@ -332,14 +320,14 @@ public class UnrolledLinkedList<T> implements List<T>, Iterable<T> {
 		}
 		return subList;
 	}
-	
 
 	@Override
 	public String toString() {
 		StringBuilder resultStr = new StringBuilder();
 		UnrolledNode<T> currentNode = head;
 		int j = 0;
-		if (currentNode == null) return EMPTY_LIST;
+		if (currentNode == null)
+			return EMPTY_LIST;
 		resultStr.append(OPEN_BRACE);
 		while (currentNode != null) {
 			if (j < currentNode.size) {
@@ -353,7 +341,7 @@ public class UnrolledLinkedList<T> implements List<T>, Iterable<T> {
 				j = 0;
 				if (currentNode != null) {
 					resultStr.append(OPEN_BRACE);
-				} 
+				}
 			}
 		}
 
@@ -433,7 +421,7 @@ public class UnrolledLinkedList<T> implements List<T>, Iterable<T> {
 			}
 		}
 	}
-	
+
 	protected T get(UnrolledNode<T> currentNode, int pos) {
 		if (currentNode == null) {
 			return null;
@@ -453,7 +441,7 @@ public class UnrolledLinkedList<T> implements List<T>, Iterable<T> {
 		}
 
 	}
-	
+
 	private void checkBounds(int pos) {
 		if ((size() == 0) || (pos > size())) {
 			throw new IndexOutOfBoundsException("Invalid index specified");
